@@ -2,9 +2,12 @@
     class db {
         // props
         private $host = 'localhost';
-        private $user = 'root';
-        private $password = '';
-        private $dbname = 'books';
+        // private $user = 'root';
+        // private $password = '';
+        // private $dbname = 'books';
+        private $user = 'id11174187_root';
+        private $password = 'Templerun3000';
+        private $dbname = 'id11174187_vierdb';
 
         // Connect
         public function connect() {
