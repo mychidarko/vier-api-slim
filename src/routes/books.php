@@ -13,6 +13,9 @@
             // query
             $stmt = $connection->query($query);
             $books = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            if (empty($books)) {
+                $books = array('message' => 'There are no notes at the moment');
+            }
             return outputResponse($response, $books);
         } catch (PDOException $e) {
             $response->getBody()->write($e->getMessage());
@@ -32,6 +35,9 @@
             // query
             $stmt = $connection->query($query);
             $books = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            if (empty($books)) {
+                $books = array('message' => 'There are no notes at the moment');
+            }
             return outputResponse($response, $books);
         } catch (PDOException $e) {
             $response->getBody()->write($e->getMessage());
@@ -50,6 +56,9 @@
             // query
             $stmt = $connection->query($query);
             $book = $stmt->fetchAll(PDO::FETCH_OBJ);
+            if (empty($book)) {
+                $books = array('message' => 'There are no notes at the moment');
+            }
             return outputResponse($response, $book);
         } catch (PDOException $e) {
             $response->getBody()->write($e->getMessage());
@@ -63,6 +72,27 @@
         $note = $request->getParam('body');
         $description = $request->getParam('description');
         $author = $request->getParam('author');
+        $errors = array();
+
+        if (empty($title)) {
+            $res = array("message" => "Title is required", "type" => "error", "clearForm" => false);
+            return outputResponse($response, $res);
+        }
+
+        if (empty($note)) {
+            $res = array("message" => "Body is required", "type" => "error", "clearForm" => false);
+            return outputResponse($response, $res);
+        }
+
+        if (empty($description)) {
+            $res = array("message" => "Description is required", "type" => "error", "clearForm" => false);
+            return outputResponse($response, $res);
+        }
+
+        if (empty($author)) {
+            $res = array("message" => "Author is required", "type" => "error", "clearForm" => false);
+            return outputResponse($response, $res);
+        }
 
         $query = "INSERT INTO books(title, author, note, description) VALUES('$title', '$author', '$note', '$description')";
         $queryTwo = "SELECT * FROM authors WHERE name = '$author'";
@@ -78,7 +108,7 @@
             if (empty($fetchedAuthor)) {
                 $connection->query($queryThree);
             }
-            $res = array("message" => "Your note has been added", "type" => "success");
+            $res = array("message" => "Your note has been added", "type" => "success", "clearForm" => true);
             return outputResponse($response, $res);
         } catch (PDOException $e) {
             $response->getBody()->write($e->getMessage());
